@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Создание заявки</title>
+    <style>
+        a {
+            text-decoration: none;
+            color: black;
+            padding: 10px;
+            margin: 0 10px;
+        }
+        a:hover {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="Orders.html">К списку заявок</a>
+        <a href="CreateOrder.html">Создание заявки</a>
+        <a href="UpdateOrder.html">Изменение заявки</a>
+        <a href="Statistic.html">Статистика заявок</a>
+    </header>
+    <form name="repairRequest" >
+        <div>
+            <textarea name="id" placeholder="Номер заявки"></textarea>
+        </div>
+        <div>
+            <textarea name="orgTechType" placeholder="Оборудование"></textarea>
+        </div>           
+        <div>
+            <textarea  name="orgTechModel" placeholder="Модель"></textarea>
+        </div>
+        <div>
+            <textarea  name="problemDescryption" placeholder="Описание проблемы"></textarea>
+        </div>
+        <div>
+            <textarea  name="fio" placeholder="ФИО"></textarea>
+        </div>
+        <div>
+            <textarea  name="phoneNumber" placeholder="Номер телефона"></textarea>
+        </div>
+        <div>
+            <input type="button" name="send" value="Отправить" />
+        </div>
+    </form>
+    <script>
+        async function CreateOrder(e){
+            e.preventDefault();
+
+            const id = document.repairRequest.id.value;
+            const orgTechType = document.repairRequest.orgTechType.value;
+            const orgTechModel = document.repairRequest.orgTechModel.value;
+            const problemDescryption = document.repairRequest.problemDescryption.value;
+            const fio = document.repairRequest.fio.value;
+            const phoneNumber = document.repairRequest.phoneNumber.value;
+            
+            const requestBody = {
+                id: id,
+                orgTechType: orgTechType,
+                orgTechModel: orgTechModel,
+                problemDescryption: problemDescryption,
+                fio: fio,
+                phoneNumber: phoneNumber
+            };
+
+            const response = await fetch("http://localhost:8080/api/repair-requests/create",
+            {
+                method: "POST", 
+                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                body: JSON.stringify(requestBody)
+            });
+            if (response.ok === true) {
+                alert("Заявка создана:"
+                    +"\nНомер заявки: " + id
+                    +"\nОборудование: " + orgTechType
+                    +"\nМодель: " + orgTechModel
+                    +"\nОписание: " + problemDescryption
+                    +"\nФИО: " + fio
+                    +"\nНомер телефона: " + phoneNumber);
+            } else {
+                alert("Ошибка создания заявки");
+            }
+        }
+        const printButton = document.repairRequest.send;
+        printButton.addEventListener("click", CreateOrder);
+    </script>
+</body>
+</html>

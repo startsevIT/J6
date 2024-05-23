@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        a {
+            text-decoration: none;
+            color: black;
+            padding: 10px;
+            margin: 0 10px;
+        }
+        a:hover {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <a href="Orders.html">К списку заявок</a>
+    <a href="CreateOrder.html">Создание заявки</a>
+    <a href="UpdateOrder.html">Изменение заявки</a>
+    <a href="Statistic.html">Статистика заявок</a>
+</header>
+<h2>Average Duration in Hours: <span id="averageDuration"></span></h2>
+
+<h2>Problem Type Statistics</h2>
+
+<table>
+    <tr>
+        <th>Problem Description | Type</th>
+        <th>Number of Requests</th>
+    </tr>
+    <tbody id="problemStatistics">
+
+    </tbody>
+</table>
+
+<script>
+    fetch('http://localhost:8080/api/statistics/completed-count')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('averageDuration').innerText = data;
+        });
+
+    fetch('http://localhost:8080/api/statistics/average-duration')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('averageDuration').innerText = data;
+        });
+
+    fetch('http://localhost:8080/api/statistics/problem-types')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.getElementById('problemStatistics');
+            for (const key in data) {
+                const row = `<tr>
+                                <td>${key}</td>
+                                <td>${data[key]}</td>
+                            </tr>`
+                tbody.insertAdjacentHTML('beforeend', row);
+            }
+        });
+</script>
+</body>
+</html>

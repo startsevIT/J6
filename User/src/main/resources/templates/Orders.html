@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Создание заявки</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        a {
+            text-decoration: none;
+            color: black;
+            padding: 10px;
+            margin: 0 10px;
+        }
+        a:hover {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="Orders.html">К списку заявок</a>
+        <a href="CreateOrder.html">Создание заявки</a>
+        <a href="UpdateOrder.html">Изменение заявки</a>
+        <a href="Statistic.html">Статистика заявок</a>
+    </header>
+    <table>
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>Оборудование</th>
+                <th>Модель</th>
+                <th>Описание</th>
+                <th>ФИО</th>
+                <th>Номер телефона</th>
+                <th>Статус</th>
+                <th>Мастер</th>
+                <th>Комментарий</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <script>
+        async function PrintOrders(){   
+            const response = await fetch("http://localhost:8080/api/repair-requests",
+                {
+                    mode:"cors",
+                    method: "GET", 
+                    headers: { 'Content-type': 'application/json'}
+                }
+            );
+            if (response.ok === true) {
+                console.log(response);
+                const repairRequests = await response.json();
+                const rows = document.querySelector("tbody");
+
+                repairRequests.forEach(repairRequest => rows.append(row(repairRequest)));
+            }
+        }       
+        function row(repairRequest) {
+            
+            const tr = document.createElement("tr");
+            tr.setAttribute("data-rowid", repairRequest.id);
+            
+            const idTd = document.createElement("td");
+            idTd.append(repairRequest.id);
+            tr.append(idTd);
+            
+            const orgTechTypeTd = document.createElement("td");
+            orgTechTypeTd.append(repairRequest.orgTechType);
+            tr.append(orgTechTypeTd);
+
+            const orgTechModelTd = document.createElement("td");
+            orgTechModelTd.append(repairRequest.orgTechModel);
+            tr.append(orgTechModelTd);
+
+            const problemDescryptionTd = document.createElement("td");
+            problemDescryptionTd.append(repairRequest.problemDescryption);
+            tr.append(problemDescryptionTd);
+
+            const fioTd = document.createElement("td");
+            fioTd.append(repairRequest.fio);
+            tr.append(fioTd);
+
+            const phoneNumberTd = document.createElement("td");
+            phoneNumberTd.append(repairRequest.phoneNumber);
+            tr.append(phoneNumberTd);
+
+            const requestStatusTd = document.createElement("td");
+            requestStatusTd.append(repairRequest.requestStatus);
+            tr.append(requestStatusTd);
+
+            const masterTd = document.createElement("td");
+            masterTd.append(repairRequest.master);
+            tr.append(masterTd);
+
+            const commentTd = document.createElement("td");
+            commentTd.append(repairRequest.comment);
+            tr.append(commentTd);
+            return tr;
+        }
+        PrintOrders();
+    </script>
+</body>
+</html>
